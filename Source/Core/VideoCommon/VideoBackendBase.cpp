@@ -266,7 +266,12 @@ void VideoBackendBase::PopulateBackendInfo()
   // We refresh the config after initializing the backend info, as system-specific settings
   // such as anti-aliasing, or the selected adapter may be invalid, and should be checked.
   ActivateBackend(Config::Get(Config::MAIN_GFX_BACKEND));
-  g_video_backend->InitBackendInfo();
+  bool loaded = g_video_backend->InitBackendInfo();
+  if (!loaded)
+  {
+    ActivateBackend("OGL");
+    g_video_backend->InitBackendInfo();
+  }
   g_Config.Refresh();
 }
 
